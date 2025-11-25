@@ -90,7 +90,7 @@ If you do not currently have Python or these tools installed, follow the platfor
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/<your-org>/vi-speech-to-text.git
+   git clone https://github.com/FrightenedFox/vi-speech-to-text.git
    cd vi-speech-to-text
    ```
 
