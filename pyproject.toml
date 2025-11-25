@@ -1,0 +1,25 @@
+[project]
+name = "vi-speech-to-text"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Vitalii Morskyi",email = "vitalii@morskyi.dev"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "openai (>=2.8.1,<3.0.0)",
+    "pydub (>=0.25.1,<0.26.0)",
+    "python-dotenv (>=1.0.1,<2.0.0)",
+    "streamlit (>=1.51.0,<2.0.0)"
+]
+
+[tool.poetry]
+packages = [
+    {include = "vi_speech_to_text", from = "src"},
+    {include = "vi-speech-to-text", from = "src"}
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
