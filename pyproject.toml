@@ -16,7 +16,6 @@ dependencies = [
 
 [tool.poetry]
 packages = [
-    {include = "vi_speech_to_text", from = "src"},
     {include = "vi-speech-to-text", from = "src"}
 ]
 
