@@ -433,12 +433,14 @@ def _compile_pdf(latex: str) -> bytes:
                 ["pdflatex", "-halt-on-error", "-interaction=nonstopmode", "document.tex"],
                 cwd=tmpdir,
                 capture_output=True,
-                text=True,
+                text=False,
                 check=False,
             )
             if proc.returncode != 0:
+                stdout = proc.stdout.decode("utf-8", errors="replace") if proc.stdout else ""
+                stderr = proc.stderr.decode("utf-8", errors="replace") if proc.stderr else ""
                 raise DocumentGenerationError(
-                    "pdflatex failed: " + (proc.stderr or proc.stdout or "unknown error")
+                    "pdflatex failed: " + (stderr or stdout or "unknown error")
                 )
             # First pass generates TOC/aux data; continue to second pass automatically.
 
