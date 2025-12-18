@@ -20,6 +20,8 @@ from vi_speech_to_text.openai_client import create_openai_client
 # API limits uploads to 25 MB so stay below that for safety.
 _MAX_CHUNK_BYTES = 24 * 1024 * 1024
 _MIN_CHUNK_MS = 5_000  # never split into segments shorter than 5 seconds unless needed.
+# ChatGPT rejects audio longer than ~1,400 seconds per request, so never exceed this.
+_MAX_CHUNK_DURATION_MS = 1_400_000
 _SUPPORTED_EXTENSIONS = {
     "mp3",
     "mp4",
@@ -310,7 +312,7 @@ def _generate_chunks(
     chunk_index = 0
     while start_ms < total_ms:
         remaining_ms = total_ms - start_ms
-        target_duration = min(approx_chunk_ms, remaining_ms)
+        target_duration = min(approx_chunk_ms, remaining_ms, _MAX_CHUNK_DURATION_MS)
 
         while True:
             payload = _export_chunk(
@@ -336,6 +338,9 @@ def _generate_chunks(
 
             target_duration = max(_MIN_CHUNK_MS, int(target_duration * 0.7))
 
+            # Stay defensive in case we ever increase the approximate chunk size later.
+            target_duration = min(target_duration, _MAX_CHUNK_DURATION_MS)
+
 
 def _estimate_chunk_duration(
     *,
@@ -351,7 +356,8 @@ def _estimate_chunk_duration(
         bytes_per_ms = max(file_size / max(duration_ms, 1), 1.0)
 
     approx_ms = int(max_chunk_bytes / bytes_per_ms) if bytes_per_ms else max_chunk_bytes
-    return max(approx_ms, _MIN_CHUNK_MS)
+    approx_ms = max(approx_ms, _MIN_CHUNK_MS)
+    return min(approx_ms, _MAX_CHUNK_DURATION_MS)
 
 
 def _resolve_export_settings(audio_format: str) -> tuple[str, str]:
