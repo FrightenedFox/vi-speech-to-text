@@ -20,8 +20,8 @@ from vi_speech_to_text.openai_client import create_openai_client
 # API limits uploads to 25 MB so stay below that for safety.
 _MAX_CHUNK_BYTES = 24 * 1024 * 1024
 _MIN_CHUNK_MS = 5_000  # never split into segments shorter than 5 seconds unless needed.
-# ChatGPT rejects audio longer than ~1,400 seconds per request, so never exceed this.
-_MAX_CHUNK_DURATION_MS = 1_400_000
+# ChatGPT rejects audio longer than ~1,400 seconds per request, so stay below this too.
+_MAX_CHUNK_DURATION_MS = 1_300_000
 _SUPPORTED_EXTENSIONS = {
     "mp3",
     "mp4",
